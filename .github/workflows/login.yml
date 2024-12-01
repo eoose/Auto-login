@@ -1,4 +1,4 @@
-name: Koyeb Login Automation
+name: Koyeb Auto Login
 
 on:
   workflow_dispatch: # 手动触发工作流
