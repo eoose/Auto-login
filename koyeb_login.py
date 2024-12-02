@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright
 def should_run_today(last_login_file, max_interval_days=15):
     """
     确定今天是否应该运行登录任务：
-    1. 如果最近运行日期不存在，返回 True。
+    1. 如果最近运行日期不存在或无效，返回 True。
     2. 如果上次运行超过 max_interval_days 天，返回 True。
     3. 在 1 到 max_interval_days 内随机选择一天运行。
     """
@@ -14,10 +14,13 @@ def should_run_today(last_login_file, max_interval_days=15):
 
     try:
         with open(last_login_file, 'r') as f:
-            last_login_date = datetime.strptime(f.read().strip(), "%Y-%m-%d").date()
-    except FileNotFoundError:
-        # 没有记录时，立即运行
-        print("No previous login record found. Running task today.")
+            content = f.read().strip()
+            if not content:
+                raise ValueError("File is empty")
+            last_login_date = datetime.strptime(content, "%Y-%m-%d").date()
+    except (FileNotFoundError, ValueError) as e:
+        # 文件不存在或内容无效时，立即运行
+        print(f"Could not read last login date ({e}). Running task today.")
         return True
 
     days_since_last_run = (today - last_login_date).days
