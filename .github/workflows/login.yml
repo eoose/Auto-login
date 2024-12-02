@@ -42,7 +42,7 @@ jobs:
           python koyeb_login.py
 
       # 保存上次运行记录
-      - name: Upload last login date
+      - name: Update last login date
         uses: actions/upload-artifact@v3
         with:
           name: last_login_date
