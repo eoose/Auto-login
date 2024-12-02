@@ -17,7 +17,6 @@ def should_run_today(last_run_file, max_interval_days=15):
             last_run_date = datetime.strptime(f.read().strip(), "%Y-%m-%d").date()
     except FileNotFoundError:
         # 没有记录时，立即运行
-        print("No last run date found. Running the task today.")
         return True
 
     days_since_last_run = (today - last_run_date).days
@@ -33,12 +32,12 @@ def should_run_today(last_run_file, max_interval_days=15):
 def login_koyeb(email, password):
     url = "https://app.koyeb.com/auth/signin"
 
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            context = browser.new_context()
-            page = context.new_page()
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context()
+        page = context.new_page()
 
+        try:
             # 打开 Koyeb 登录页面
             page.goto(url)
 
@@ -49,39 +48,33 @@ def login_koyeb(email, password):
             # 点击登录按钮
             page.click('button[type="submit"]')
 
-            # 等待页面加载完成 
-            page.wait_for_timeout(10000)  # 可以调整这里的等待时间以避免超时
+            # 等待页面加载完成，确保登录成功
+            page.wait_for_selector("text=Dashboard", timeout=20000)
             print("Login successful, page title:", page.title())
 
-    except Exception as e:
-        print(f"An error occurred during login: {e}")
-    finally:
-        # 关闭浏览器
-        browser.close()
+        except Exception as e:
+            print(f"An error occurred during login: {e}")
+
+        finally:
+            # Ensure the browser is closed properly
+            browser.close()
 
 if __name__ == "__main__":
     last_run_file = "last_run_date.txt"
     max_interval_days = 15
 
-    # 判断今天是否需要运行
     if should_run_today(last_run_file, max_interval_days):
         email = os.getenv("KOYEB_EMAIL")
         password = os.getenv("KOYEB_PASSWORD")
 
-        # 检查环境变量是否设置
         if not email or not password:
             raise ValueError("KOYEB_EMAIL 和 KOYEB_PASSWORD 环境变量未设置")
 
-        # 执行登录任务
         login_koyeb(email, password)
 
         # 记录今天的日期
         today = datetime.now().date()
-        try:
-            with open(last_run_file, 'w') as f:
-                f.write(str(today))
-            print(f"Last run date updated to {today}.")
-        except Exception as e:
-            print(f"Failed to update last run date: {e}")
+        with open(last_run_file, 'w') as f:
+            f.write(str(today))
     else:
         print("Skipping login today.")
