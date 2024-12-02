@@ -37,27 +37,27 @@ def login_koyeb(email, password):
         context = browser.new_context()
         page = context.new_page()
 
-        try:
-            # 打开 Koyeb 登录页面
-            page.goto(url)
+        # 打开 Koyeb 登录页面
+        page.goto(url)
 
-            # 填写邮箱和密码
-            page.fill('input[name="email"]', email)
-            page.fill('input[name="password"]', password)
+        # 填写邮箱和密码
+        page.fill('input[name="email"]', email)
+        page.fill('input[name="password"]', password)
 
-            # 点击登录按钮
-            page.click('button[type="submit"]')
+        # 点击登录按钮
+        page.click('button[type="submit"]')
 
-            # 等待页面加载完成，确保登录成功
-            page.wait_for_selector("text=Dashboard", timeout=20000)
-            print("Login successful, page title:", page.title())
+        # 等待页面跳转
+        page.wait_for_navigation(timeout=20000)  # 等待页面跳转完成
 
-        except Exception as e:
-            print(f"An error occurred during login: {e}")
+        # 直接检查当前页面 URL 是否是成功登录后的 URL
+        if page.url() == "https://app.koyeb.com/":
+            print("Login successful, page title:", page.title())  # 登录成功
+        else:
+            print("Login failed, current URL:", page.url())  # 登录失败
 
-        finally:
-            # Ensure the browser is closed properly
-            browser.close()
+        # 关闭浏览器
+        browser.close()
 
 if __name__ == "__main__":
     last_run_file = "last_run_date.txt"
