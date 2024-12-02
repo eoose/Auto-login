@@ -56,13 +56,19 @@ def login_koyeb(email, password):
             # 点击登录按钮
             page.click('button[type="submit"]')
 
-            # 等待页面加载完成
-            page.wait_for_selector("text=Dashboard", timeout=10000)  # 等待登录成功
-            print("Login successful. Page title:", page.title())
+            # 等待登录成功
+            try:
+                # 调整等待时间和选择器
+                page.wait_for_selector("text=Dashboard", timeout=20000)  
+                print("Login successful, page title:", page.title())
+            except Exception as e:
+                # 打印页面状态以帮助调试
+                print("Login failed. Page content:")
+                print(page.content())  # 输出页面 HTML 内容
+                raise e  # 抛出原始异常
 
     except Exception as e:
         print(f"An error occurred during login: {e}")
-        raise
     finally:
         if 'browser' in locals():
             browser.close()
