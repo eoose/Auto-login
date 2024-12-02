@@ -1,3 +1,4 @@
+
 name: Koyeb Auto Login
 
 on:
@@ -34,3 +35,47 @@ jobs:
           KOYEB_PASSWORD: ${{ secrets.KOYEB_PASSWORD }}
         run: |
           python koyeb_login.py
+
+jobs:
+  playwright-login:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码库
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 恢复上次运行记录
+      - name: Download last run date
+        uses: actions/download-artifact@v3
+        with:
+          name: last_run_date
+        continue-on-error: true
+
+      # 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      # 安装依赖
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          playwright install # 安装浏览器依赖
+
+      # 执行登录任务
+      - name: Run Playwright script
+        env:
+          KOYEB_EMAIL: ${{ secrets.KOYEB_EMAIL }}
+          KOYEB_PASSWORD: ${{ secrets.KOYEB_PASSWORD }}
+        run: |
+          python koyeb_login.py
+
+      # 保存上次运行记录
+      - name: Upload last login date
+        uses: actions/upload-artifact@v3
+        with:
+          name: last_login_date
+          path: last_login_date.txt
