@@ -51,7 +51,7 @@ def login_koyeb(email, password):
         page.wait_for_url("https://app.koyeb.com/", timeout=20000)
 
         # 检查当前页面 URL 是否是成功登录后的 URL
-        if page.url() == "https://app.koyeb.com/":
+        if page.url == "https://app.koyeb.com/":
             print("Login successful, page title:", page.title())  # 登录成功
         else:
             print("Login failed, current URL:", page.url())  # 登录失败
