@@ -47,10 +47,10 @@ def login_koyeb(email, password):
         # 点击登录按钮
         page.click('button[type="submit"]')
 
-        # 等待页面跳转
-        page.wait_for_navigation(timeout=20000)  # 等待页面跳转完成
+        # 等待页面跳转，直到 URL 变为目标 URL
+        page.wait_for_url("https://app.koyeb.com/", timeout=20000)
 
-        # 直接检查当前页面 URL 是否是成功登录后的 URL
+        # 检查当前页面 URL 是否是成功登录后的 URL
         if page.url() == "https://app.koyeb.com/":
             print("Login successful, page title:", page.title())  # 登录成功
         else:
