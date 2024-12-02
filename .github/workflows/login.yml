@@ -13,13 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 恢复上次运行记录
-      - name: Download last login date
-        uses: actions/download-artifact@v3
-        with:
-          name: last_login_date
-        continue-on-error: true
-
       # 设置 Python 环境
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -40,10 +33,3 @@ jobs:
           KOYEB_PASSWORD: ${{ secrets.KOYEB_PASSWORD }}
         run: |
           python koyeb_login.py
-
-      # 保存上次运行记录
-      - name: Update last login date
-        uses: actions/upload-artifact@v3
-        with:
-          name: last_login_date
-          path: last_login_date.txt
