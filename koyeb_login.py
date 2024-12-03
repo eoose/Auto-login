@@ -23,7 +23,7 @@ def login_koyeb(email, password):
         # 等待页面跳转并判断是否成功
         page.wait_for_timeout(10000)  
         if page.url == "https://app.koyeb.com/":
-            print("{email}: Login successful")
+             print(f"{email}: Login successful")
             
             # 更新登录日期到文件
             today = datetime.now().date()
