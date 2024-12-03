@@ -3,7 +3,7 @@ name: Koyeb Auto Login
 on:
   workflow_dispatch: 
   schedule:
-    - cron: '0 9 * * *' # 每天上午 9 点运行
+    - cron: '0 0 12,25 * *' # 每月12号和25号运行
 
 jobs:
   playwright-login:
