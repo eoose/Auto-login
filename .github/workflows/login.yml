@@ -8,11 +8,14 @@ on:
 jobs:
   playwright-login:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
-      # 检出代码
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       # 设置 Python 环境
       - name: Set up Python
