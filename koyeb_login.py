@@ -27,7 +27,7 @@ def login_koyeb(email, password):
             
             # 更新登录日期到文件
             today = datetime.now().date()
-            with open("last_login_date.txt", "w") as f:
+            with open("./last_login_date.txt", "w") as f:
                 f.write(str(today))
         else:
             print("Login failed: URL did not match the expected page.")
