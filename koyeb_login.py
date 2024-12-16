@@ -4,6 +4,7 @@ from playwright.sync_api import sync_playwright
 
 def login_koyeb(email, password):
     url = "https://app.koyeb.com/auth/signin"
+    last_run_file = os.path.join(os.getcwd(), "last_login_date.txt")
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -20,20 +21,20 @@ def login_koyeb(email, password):
         # 点击登录按钮
         page.click('button[type="submit"]')
 
-        # 等待页面跳转并判断是否成功
-        page.wait_for_timeout(5000)  # 等待页面加载
-        print(f"Current URL: {page.url}")  # 调试 URL
+        # 等待页面跳转
+        page.wait_for_timeout(5000)
+        print(f"Current URL: {page.url}")
         if page.url == "https://app.koyeb.com/":
             print(f"Login successful for account: {email}")
             
             # 更新登录日期到文件
             today = datetime.now().date()
             try:
-                with open("./last_login_date.txt", "w") as f:
+                with open(last_run_file, "w") as f:
                     f.write(str(today))
-                print("last_login_date.txt updated successfully.")
+                print(f"File updated successfully at {last_run_file}.")
             except Exception as e:
-                print(f"Error updating last_login_date.txt: {e}")
+                print(f"Error updating {last_run_file}: {e}")
         else:
             print("Login failed: URL did not match the expected page.")
 
