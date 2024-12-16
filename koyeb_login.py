@@ -21,9 +21,9 @@ def login_koyeb(email, password):
         page.click('button[type="submit"]')
 
         # 等待页面跳转并判断是否成功
-        page.wait_for_timeout(10000)  
+        page.wait_for_timeout(5000)  # 等待页面加载
         if page.url == "https://app.koyeb.com/":
-             print(f"{email}: Login successful")
+            print(f"Login successful for account: {email}")
             
             # 更新登录日期到文件
             today = datetime.now().date()
