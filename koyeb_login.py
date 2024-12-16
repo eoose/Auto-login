@@ -22,13 +22,18 @@ def login_koyeb(email, password):
 
         # 等待页面跳转并判断是否成功
         page.wait_for_timeout(5000)  # 等待页面加载
+        print(f"Current URL: {page.url}")  # 调试 URL
         if page.url == "https://app.koyeb.com/":
             print(f"Login successful for account: {email}")
             
             # 更新登录日期到文件
             today = datetime.now().date()
-            with open("./last_login_date.txt", "w") as f:
-                f.write(str(today))
+            try:
+                with open("./last_login_date.txt", "w") as f:
+                    f.write(str(today))
+                print("last_login_date.txt updated successfully.")
+            except Exception as e:
+                print(f"Error updating last_login_date.txt: {e}")
         else:
             print("Login failed: URL did not match the expected page.")
 
